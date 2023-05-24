@@ -73,7 +73,7 @@ function formatTextForDisplay(text) {
       modalContent.style.position = 'relative';
       modalContent.style.width = '700px'; // Adjust the width as desired
       modalContent.style.overflow = 'scroll';
-      modalContent.style.height = '500px';
+      modalContent.style.height = window.innerHeight - 100 + 'px';
       modalContent.style.display = 'flex';
   
       // Create the left section
@@ -122,8 +122,9 @@ function formatTextForDisplay(text) {
   
       // Create the color picker button
       const colorPickerButton = document.createElement('button');
-      colorPickerButton.innerHTML = 'Pick Node Color';
+      colorPickerButton.innerHTML = 'Node Color';
       colorPickerButton.style.padding = '8px 12px';
+      colorPickerButton.textAlign = 'center';
       colorPickerButton.style.background = '#007bff';
       colorPickerButton.style.color = '#dfff';
       colorPickerButton.style.border = 'none';
@@ -137,7 +138,7 @@ function formatTextForDisplay(text) {
       colorCircle.style.width = '20px';
       colorCircle.style.height = '20px';
       colorCircle.style.borderRadius = '50%';
-      colorCircle.style.marginRight = '10px';
+      colorCircle.style.marginLeft = '20px';
       colorCircle.style.background = selectedNode.color;
       colorPickerButton.appendChild(colorCircle);
   
@@ -151,9 +152,8 @@ function formatTextForDisplay(text) {
       colorPickerInput.addEventListener('input', () => {
         const selectedColor = colorPickerInput.value;
         selectedNode.color = selectedColor;
-        colorCircle.style.background = selectedColor; // Update the color circle
-        // Update the node color in your data model or perform any other desired actions
-        console.log('Selected color:', selectedColor);
+        colorCircle.style.background = selectedColor;
+        modalContent.style.background = selectedColor;
       });
   
       // Append the edit button, color picker input field, and color picker button to the right section
@@ -174,11 +174,12 @@ function formatTextForDisplay(text) {
           nameInput.value = selectedNode.name;
           nameInput.style.width = '100%';
           nameInput.style.marginBottom = '10px';
+          nameInput.style.height = "25px";
   
           const noteInput = document.createElement('textarea');
           noteInput.value = formatTextForEdit(selectedNode.note);
           noteInput.style.width = '100%';
-          noteInput.style.minHeight = '100px';
+          noteInput.style.minHeight = '200px';
           noteInput.style.resize = 'vertical';
   
           // Replace node name and note text with the input fields

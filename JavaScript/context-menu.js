@@ -1,6 +1,7 @@
 // Variables to store the context menu and its options
 const contextMenu = document.getElementById('contextMenu');
 const addNodeOption = document.getElementById('addNode');
+const expandNode = document.getElementById('expandNode');
 const editNodeOption = document.getElementById('editNode');
 const deleteNodeOption = document.getElementById('deleteNode');
 
@@ -33,6 +34,16 @@ editNodeOption.addEventListener('click', () => {
 deleteNodeOption.addEventListener('click', () => {
   hideContextMenu();
   deleteNode(selectedNode);
+});
+
+expandNode.addEventListener('click', () => {
+  hideContextMenu();
+  const noteBox = document.getElementById('noteBox');
+        if (noteBox) {
+          noteBox.parentNode.removeChild(noteBox);
+        } else {
+          displayNoteBox();
+        }
 });
 
 const noteOption = document.createElement('div');
