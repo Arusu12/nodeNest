@@ -87,6 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const file = event.target.files[0];
       importNodes(file);
     });
+
+    const clearAndNewNode = document.getElementById('newNodeMap')
+    clearAndNewNode.addEventListener('click', newNodeMap)
+
   });
   
 const saveImage = document.getElementById('saveImage')

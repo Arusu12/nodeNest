@@ -8,6 +8,9 @@
     background-color: #f1f1f1;
     padding: 20px;
     transition: left 0.3s; /* Add smooth transition effect */
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
   }
 
   .navigation-bar:hover {
@@ -18,16 +21,17 @@
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    background: linear-gradient(to right, #56CCF2 0%, #2F80ED 100%);
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     margin: 5px;
+    justify-content: flex-start;
   }
   
   .navigation-bar button:hover {
-    background-color: #45a049;
+    background: linear-gradient(to right, #56CCF2 0%, #358dff 100%);
   }
 
   .navigation-bar input[type='file']{
@@ -38,11 +42,11 @@
     width: 100%;
     position: relative;
     display: inline-block;
-    font-family: Arial, sans-serif;
   }
 
   .dropdown-content {
     display: none;
+    margin-left: 5px;
     position: absolute;
     background-color: #f9f9f9;
     width: 180px;
@@ -60,12 +64,59 @@
     width: 100%;
     padding: 10px;
     background-color: #ffffff;
+    border: white solid 1px;
     color: black;
-    border: none;
     cursor: pointer;
     text-align: center;
   }
 
   .content:hover{
-    background-color: #dfdfdf;
+    background-color: #f1f1f1;
+    border: black solid 1px;
+    border-image: linear-gradient(to right, #00CFC8 0%, #5E74FF 100%);
+    border-image-slice: 1;
   }
+
+.logo{
+  text-align: center;
+  background: #00CFC8;
+background: linear-gradient(to right, #00CFC8 0%, #5E74FF 100%);
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+height:50px;
+
+}
+
+.user-card{
+  display: block;
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    color: black;
+    border: black solid 1px;
+    border-image: linear-gradient(to right, #00CFC8 0%, #5E74FF 100%);
+    border-image-slice: 1;
+    cursor: pointer;
+    margin: 4px;
+    margin-top: auto;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align items vertically in the center */
+}
+
+.pfp {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: gray;
+  margin: 5px;
+  margin-left: 15px;
+}
+
+.username {
+  font-weight: bold;
+  text-align: center;
+  margin-left: 10px;
+}

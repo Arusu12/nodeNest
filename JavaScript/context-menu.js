@@ -66,3 +66,30 @@ function hideContextMenu() {
   contextMenu.style.display = 'none';
   document.removeEventListener('click', hideContextMenuOnClick);
 }
+
+var touchStartTime;
+var touchEndTime;
+
+function onTouchStart(event) {
+  touchStartTime = new Date().getTime();
+}
+
+function onTouchEnd(event) {
+  touchEndTime = new Date().getTime();
+  var touchDuration = touchEndTime - touchStartTime;
+
+  if (touchDuration >= 500) {
+    event.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const x = event.changedTouches[0].clientX - rect.left;
+    const y = event.changedTouches[0].clientY - rect.top;
+    if (selectedNode) {
+      showContextMenu(x, y);
+      document.addEventListener('click', hideContextMenuOnClick);
+    }
+  }
+}
+
+// Add event listeners
+canvas.addEventListener('touchstart', onTouchStart);
+canvas.addEventListener('touchend', onTouchEnd);
