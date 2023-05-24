@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/canvas.css">
+  <link rel="stylesheet" href="css/context-menu.css">
+  <link rel="stylesheet" href="css/navbar.css">
+</head>
+<body>
+  <div class="navigation-bar">
+    <div class="dropdown">
+      <button id="exportButton">Export Map</button>
+      <div class="dropdown-content">
+        <a class= "content" id="ExportAsJSON">JSON</a>
+        <a class= "content" id="ExportAsCSV">CSV</a>
+      </div>
+    </div>
+    <button id="importButton" onclick="document.getElementById('importInput').click();">Import Map</button>
+    <input type="file" id="importInput" accept=".json">
+    <button id="saveImage">Save Image</button>
+  </div>
+
+  <canvas id="mindChartCanvas"></canvas>
+
+  <div id="contextMenu">
+    <ul>
+      <li id="addNode">Add Node</li>
+      <li id="editNode">Edit Node</li>
+      <li id="deleteNode">Delete Node</li>
+    </ul>
+  </div>
+
+  <script src="JavaScript/mindChart.js"></script>
+  <script src="JavaScript/canvasInteractions.js"></script>
+  <script src="JavaScript/nodeActions.js"></script>
+  <script src="JavaScript/note.js"></script>
+  <script src="JavaScript/import.js"></script>
+  <script src="JavaScript/export.js"></script>
+  <script src="JavaScript/autosave.js"></script>
+  <script src="JavaScript/context-menu.js"></script>
+  <script src="JavaScript/events.js"></script>
+  <script src="JavaScript/onPageLoad.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+/* Reset default margins and paddings */
+body, ul {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Apply box-sizing to all elements */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Define styles for the sidebar */
+  .sidebar {
+    background-color: #f1f1f1;
+    padding: 20px;
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+  
+  .sidebar button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .sidebar input[type="file"] {
+    width: 100%;
+  }
+  
