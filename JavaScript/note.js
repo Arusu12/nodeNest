@@ -1,29 +1,63 @@
 function formatTextForDisplay(text) {
-    // Format code blocks
-    text = text.replace(/```(.*?)```/g, '<code>$1</code>');
-  
-    // Format deleted text
-    text = text.replace(/~(.*?)~/g, '<del>$1</del>');
-  
-    // Format bold-italic text
-    text = text.replace(/\*\*\*(.*?)\*\*\*/g, '<span style="font-style: italic; font-weight: bold;">$1</span>');
-  
-    // Format bold text
-    text = text.replace(/\*\*(.*?)\*\*/g, '<span style="font-weight: bold;">$1</span>');
-  
-    // Format italic text
-    text = text.replace(/\*(.*?)\*/g, '<span style="font-style: italic;">$1</span>');
-  
-    // Format headers
-    text = text.replace(/###(.*?)###/g, '<h3>$1</h3>');
-    text = text.replace(/##(.*?)##/g, '<h2>$1</h2>');
-    text = text.replace(/#(.*?)#/g, '<h1>$1</h1>');
-  
-    // Preserve line breaks
-    text = text.replace(/\n/g, '<br>');
-  
-    return text;
-  }
+  // Format code blocks ```codes here```
+  text = text.replace(/```([\s\S]*?)```/g, function (match, code) {
+    code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<pre class="codeblock"><code>' + code + '</code></pre>';
+  });
+
+  // Format in-line codes `code here`
+  text = text.replace(/`([\s\S]*?)`/g, function (match, code) {
+    code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<code class="inline-code">' + code + '</code>';
+  });
+
+  // Format spoiler text ||spoiler here||
+  text = text.replace(/\|\|([\s\S]*?)\|\|/g, function (match, code) {
+    code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<code class="spoiler">' + code + '</code>';
+  });
+
+  text = text.replace(/(\d+)\. (.+)/g, '<div class="markdown">$1. $2</div>');
+  text = text.replace(/\- (.+)/g, '<li class="markdown">$1</li>');
+
+  // Format deleted text ~text here~
+  text = text.replace(/~([\s\S]*?)~/g, '<del>$1</del>');
+
+  // Format underline text _text here_
+  text = text.replace(/\_([\s\S]*?)\_/g, function (match, code) {
+    code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<u>' + code + '</u>';
+  });
+
+  // Format bold-italic text ***text here***
+  text = text.replace(/\*\*\*([\s\S]*?)\*\*\*/g, '<span style="font-style: italic; font-weight: bold;">$1</span>');
+
+  // Format bold text **text here**
+  text = text.replace(/\*\*([\s\S]*?)\*\*/g, '<span style="font-weight: bold;">$1</span>');
+
+  // Format italic text *text here*
+  text = text.replace(/\*([\s\S]*?)\*/g, '<span style="font-style: italic;">$1</span>');
+
+  // Format headers #Header 1# ##Header 2## ###Header 3###
+  text = text.replace(/###([\s\S]*?)###/g, '<h3>$1</h3>');
+  text = text.replace(/##([\s\S]*?)##/g, '<h2>$1</h2>');
+  text = text.replace(/#([\s\S]*?)#/g, '<h1>$1</h1>');
+
+  // Format image !!width-pixel[alt text](URL)
+  text = text.replace(/\!\!([\s\S]*?)\[(.*?)\]\((.*?)\)/g, '<img src="$3" class="note-hyperlink" style="max-width: $1px " alt="$2">');
+
+  // Format images ![alt text](URL)
+  text = text.replace(/\!\[(.*?)\]\((.*?)\)/g, '<img src="$2" class="note-hyperlink-image" alt="$1">');
+
+  // Format links [link text](URL)
+  text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+  // Preserve line breaks
+  text = text.replace(/\n/g, '<br>');
+
+  return text;
+}
+
   
   
   function formatTextForEdit(text) {
@@ -46,101 +80,60 @@ function formatTextForDisplay(text) {
       const note = selectedNode.note;
   
       // Create the modal overlay
-      const overlay = document.createElement('div');
-      overlay.setAttribute('id', 'overlay');
-      overlay.style.position = 'fixed';
-      overlay.style.top = '0';
-      overlay.style.left = '0';
-      overlay.style.width = '100%';
-      overlay.style.height = '100%';
-      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-      overlay.style.display = 'flex';
-      overlay.style.justifyContent = 'center';
-      overlay.style.alignItems = 'center';
-      overlay.style.zIndex = '9999';
-  
-      // Create the modal content container
-      const modalContent = document.createElement('div');
-      modalContent.setAttribute('id', 'modalContent');
-      modalContent.style.background = '#fff';
-      modalContent.style.padding = '20px';
-      modalContent.style.borderRadius = '4px';
-      modalContent.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.3)';
-      modalContent.style.fontFamily = 'Arial, sans-serif';
-      modalContent.style.fontSize = '14px';
-      modalContent.style.color = 'black';
-      modalContent.style.backgroundColor = selectedNode.color;
-      modalContent.style.position = 'relative';
-      modalContent.style.width = '700px'; // Adjust the width as desired
-      modalContent.style.overflow = 'scroll';
-      modalContent.style.height = window.innerHeight - 100 + 'px';
-      modalContent.style.display = 'flex';
-  
-      // Create the left section
-      const leftSection = document.createElement('div');
-      leftSection.style.flex = '4';
-  
-      // Create the node name
-      const nodeName = document.createElement('div');
-      nodeName.innerHTML = selectedNode.name;
-      nodeName.style.marginBottom = '20px';
-      nodeName.style.fontWeight = 'bold';
-      nodeName.style.fontSize = '20px';
-  
-      // Create the note text
-      const noteText = document.createElement('div');
-      noteText.innerHTML = formatTextForDisplay(note);
-      noteText.style.marginBottom = '20px';
-  
-      // Append the node name and note text to the left section
-      leftSection.appendChild(nodeName);
-      leftSection.appendChild(noteText);
-  
-      // Create the right section
-      const rightSection = document.createElement('div');
-      rightSection.style.flex = '1';
-      rightSection.style.display = 'flex';
-      rightSection.style.flexDirection = 'column';
-      rightSection.style.marginLeft = '20px';
-  
-      // Create the edit button
-      const editButton = document.createElement('button');
-      editButton.innerHTML = 'Edit';
-      editButton.style.padding = '8px 12px';
-      editButton.style.background = '#007bff';
-      editButton.style.color = '#fff';
-      editButton.style.border = 'none';
-      editButton.style.borderRadius = '4px';
-      editButton.style.cursor = 'pointer';
-      editButton.style.marginBottom = '10px';
-  
-      // Create the color picker input field
-      const colorPickerInput = document.createElement('input');
-      colorPickerInput.type = 'color';
-      colorPickerInput.value = selectedNode.color || '#ffff'; // Set initial color value
-      colorPickerInput.style.display = 'none'; // Hide the color picker
-  
-      // Create the color picker button
-      const colorPickerButton = document.createElement('button');
-      colorPickerButton.innerHTML = 'Node Color';
-      colorPickerButton.style.padding = '8px 12px';
-      colorPickerButton.textAlign = 'center';
-      colorPickerButton.style.background = '#007bff';
-      colorPickerButton.style.color = '#dfff';
-      colorPickerButton.style.border = 'none';
-      colorPickerButton.style.borderRadius = '4px';
-      colorPickerButton.style.cursor = 'pointer';
-      colorPickerButton.style.display = 'flex';
-      colorPickerButton.style.alignItems = 'center';
-  
-      // Create the circle to display the chosen color
-      const colorCircle = document.createElement('div');
-      colorCircle.style.width = '20px';
-      colorCircle.style.height = '20px';
-      colorCircle.style.borderRadius = '50%';
-      colorCircle.style.marginLeft = '20px';
-      colorCircle.style.background = selectedNode.color;
-      colorPickerButton.appendChild(colorCircle);
+const overlay = document.createElement('div');
+overlay.setAttribute('id', 'overlay');
+overlay.classList.add('overlay');
+
+// Create the modal content container
+const modalContent = document.createElement('div');
+modalContent.setAttribute('id', 'modalContent');
+modalContent.classList.add('modal-content');
+modalContent.style.backgroundColor = selectedNode.color;
+
+// Create the left section
+const leftSection = document.createElement('div');
+leftSection.classList.add('left-section');
+
+// Create the node name
+const nodeName = document.createElement('div');
+nodeName.innerHTML = selectedNode.name;
+nodeName.classList.add('node-name');
+
+// Create the note text
+const noteText = document.createElement('div');
+noteText.innerHTML = formatTextForDisplay(note);
+noteText.classList.add('note-text');
+
+// Append the node name and note text to the left section
+leftSection.appendChild(nodeName);
+leftSection.appendChild(noteText);
+
+// Create the right section
+const rightSection = document.createElement('div');
+rightSection.classList.add('right-section');
+
+// Create the edit button
+const editButton = document.createElement('button');
+editButton.innerHTML = 'Edit';
+editButton.classList.add('edit-button');
+
+// Create the color picker input field
+const colorPickerInput = document.createElement('input');
+colorPickerInput.type = 'color';
+colorPickerInput.value = selectedNode.color || '#ffff'; // Set initial color value
+colorPickerInput.style.display = 'none'; // Hide the color picker
+
+// Create the color picker button
+const colorPickerButton = document.createElement('button');
+colorPickerButton.innerHTML = 'Node Color';
+colorPickerButton.classList.add('color-picker-button');
+
+// Create the circle to display the chosen color
+const colorCircle = document.createElement('div');
+colorCircle.classList.add('color-circle');
+colorCircle.style.backgroundColor = selectedNode.color;
+colorPickerButton.appendChild(colorCircle);
+
   
       // Add event listener to show color picker on click
       colorPickerButton.addEventListener('click', () => {
@@ -163,25 +156,43 @@ function formatTextForDisplay(text) {
   
       let editMode = false; // Flag to indicate edit mode
   
-      // Add event listener for the edit button
       editButton.addEventListener('click', () => {
         // Toggle edit mode
         editMode = !editMode;
-  
+      
         if (editMode) {
           // Enter edit mode
+          const cancelButton = document.createElement('button');
+          cancelButton.innerHTML = 'Cancel';
+          cancelButton.classList.add('cancel-button');
+          rightSection.appendChild(cancelButton);
+      
+          cancelButton.addEventListener('click', () => {
+            // Exit edit mode when cancel button is clicked
+            editMode = false;
+      
+            // Replace input fields with the original node name and note text
+            leftSection.replaceChild(nodeName, leftSection.querySelector('input'));
+            leftSection.replaceChild(noteText, leftSection.querySelector('textarea'));
+            editButton.innerHTML = 'Edit';
+      
+            // Reset the selectedNode's name and note to the original values
+            selectedNode.name = nodeName.innerHTML;
+            selectedNode.note = formatTextForEdit(noteText.innerHTML);
+      
+            cancelButton.remove(); // Remove the cancel button
+      
+            drawMindChart();
+          });
+      
           const nameInput = document.createElement('input');
           nameInput.value = selectedNode.name;
-          nameInput.style.width = '100%';
-          nameInput.style.marginBottom = '10px';
-          nameInput.style.height = "25px";
-  
+          nameInput.classList.add('name-input');
+      
           const noteInput = document.createElement('textarea');
           noteInput.value = formatTextForEdit(selectedNode.note);
-          noteInput.style.width = '100%';
-          noteInput.style.minHeight = '200px';
-          noteInput.style.resize = 'vertical';
-  
+          noteInput.classList.add('note-input');
+      
           // Replace node name and note text with the input fields
           leftSection.replaceChild(nameInput, nodeName);
           leftSection.replaceChild(noteInput, noteText);
@@ -190,20 +201,27 @@ function formatTextForDisplay(text) {
           // Exit edit mode
           const updatedName = leftSection.querySelector('input').value;
           const updatedNote = leftSection.querySelector('textarea').value;
-  
+      
           // Replace input fields with the updated node name and note text
           leftSection.replaceChild(nodeName, leftSection.querySelector('input'));
           leftSection.replaceChild(noteText, leftSection.querySelector('textarea'));
           nodeName.innerHTML = updatedName;
           noteText.innerHTML = formatTextForDisplay(updatedNote);
           editButton.innerHTML = 'Edit';
-  
+      
           // Update the selectedNode's name and note
           selectedNode.name = updatedName;
           selectedNode.note = updatedNote;
+      
+          const cancelButton = rightSection.querySelector('button.cancel-button');
+          if (cancelButton) {
+            cancelButton.remove(); // Remove the cancel button if it exists
+          }
+      
+          drawMindChart();
         }
-        drawMindChart();
       });
+      
   
       // Append the left and right sections to the modal content
       modalContent.appendChild(leftSection);
