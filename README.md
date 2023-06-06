@@ -1,5 +1,6 @@
 ## This project is not updated regularly. The server-side code is being developed over time but it wouldn't be published here for security reasons (authentication, token and other API security). The front-end codes will be updated if there are any updates on the server-side project.
-You can request features in the Issues tab.
+### You can request features in the Issues tab.
+
 ---
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 ---
